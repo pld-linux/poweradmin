@@ -1,0 +1,60 @@
+diff -urN poweradmin-1.2.7/inc/record.inc.php poweradmin-nastach/inc/record.inc.php
+--- poweradmin-1.2.7/inc/record.inc.php	2003-05-15 00:51:35.000000000 +0200
++++ poweradmin-nastach/inc/record.inc.php	2005-02-09 17:56:21.426285496 +0100
+@@ -251,7 +251,7 @@
+  * remember to request nextID's from the database to be able to insert record.
+  * if anything is invalid the function will error
+  */
+-function add_domain($domain, $owner, $webip, $mailip, $empty, $type)
++function add_domain($domain, $owner, $webip, $mailip, $masterip, $empty, $type)
+ {
+ 
+ 	global $db;
+@@ -279,9 +279,13 @@
+ 		/*
+ 		 * TODO : NATIVE OPERATION ONLY FOR NOW
+ 		 */
+-
+-		$db->query("INSERT INTO domains (id, name, type) VALUES ('$iddomains', '$domain', '$type')");
+-
++		if($type == 'SLAVE')
++		{
++		    $db->query("INSERT INTO domains (id, name, master, type) VALUES ('$iddomains', '$domain', '$masterip', '$type')");
++		}else
++		{
++		    $db->query("INSERT INTO domains (id, name, type) VALUES ('$iddomains', '$domain', '$type')");    
++		}
+ 		// Generate new timestamp. We need this one anyhow.
+ 		$now = time();
+ 
+diff -urN poweradmin-1.2.7/index.php poweradmin-nastach/index.php
+--- poweradmin-1.2.7/index.php	2003-05-15 00:51:35.000000000 +0200
++++ poweradmin-nastach/index.php	2005-02-09 17:56:40.329411784 +0100
+@@ -59,6 +59,7 @@
+ 	$owner = $_POST["owner"];
+ 	$webip = $_POST["webip"];
+ 	$mailip = $_POST["mailip"];
++	$masterip = $_POST["masterip"];
+ 	$empty = $_POST["empty"];
+ 	$dom_type = isset($_POST["dom_type"]) ? $_POST["dom_type"] : "NATIVE";
+ 	if(!$empty)
+@@ -82,7 +83,7 @@
+ 		//elseif (isset($mailip) && is_valid_ip(
+ 		else
+ 		{
+-			add_domain($domain, $owner, $webip, $mailip, $empty, $dom_type);
++			add_domain($domain, $owner, $webip, $mailip, $masterip, $empty, $dom_type);
+ 			clean_page();
+ 		}
+ 	}
+@@ -203,6 +204,10 @@
+ 	?>
+ 	</SELECT>
+ 	</TD></TR>
++	<TR>
++	    <TD CLASS="tdbg">Master IP: </TD>
++	    <TD CLASS="tdbg"><INPUT TYPE="text" CLASS="input" NAME="masterip" VALUE="<? if($error) print $_POST["masterip"]; ?>"></TD>
++	    </TR>
+ 	<? } ?>
+ 	<TR><TD CLASS="tdbg">Create zone without<BR>applying records-template:</TD><TD CLASS="tdbg"><INPUT TYPE="checkbox" NAME="empty" VALUE="1"></TD></TR>
+ 	<TR><TD CLASS="tdbg">&nbsp;</TD><TD CLASS="tdbg"><INPUT TYPE="submit" CLASS="button" NAME="submit" VALUE="Add domain"></TD></TR>
