@@ -33,22 +33,20 @@ PowerAdmin is a web-based front-end for the PowerDNS
 %description -l pl
 PowerAdmin to oparty na web interfejs dla PowerDNS
 (www.powerdns.com) DNS serwer.
+
 %prep
 %setup -q
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_poweradmindir}
-install -d $RPM_BUILD_ROOT%{_poweradmindir}/images
-install -d $RPM_BUILD_ROOT%{_poweradmindir}/inc
-install -d $RPM_BUILD_ROOT%{_poweradmindir}/docs
-install -d $RPM_BUILD_ROOT%{_poweradmindir}/styl
+install -d $RPM_BUILD_ROOT%{_poweradmindir}/{images,inc,docs,style}
 
 install *.php *.php-pa 	$RPM_BUILD_ROOT%{_poweradmindir}
 install docs/{ChangeLog,README,README-Sequence,REDHAT-README,TODO} $RPM_BUILD_ROOT%{_poweradmindir}/docs
 install images/*.* 	$RPM_BUILD_ROOT%{_poweradmindir}/images
 install	style/*.* 	$RPM_BUILD_ROOT%{_poweradmindir}/style
 install inc/*.* 	$RPM_BUILD_ROOT%{_poweradmindir}/inc
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
