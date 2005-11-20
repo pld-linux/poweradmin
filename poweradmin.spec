@@ -10,8 +10,8 @@ Source0:	http://dl.sourceforge.net/poweradmin/%{name}-%{version}.tar.gz
 Source1:	%{name}.conf
 Patch0:		%{name}-addmasterip.patch
 URL:		http://www.poweradmin.org/
-#Requires:	apache >= 1.3.27-4
-Requires:	apache-mod_dir >= 1.3.27-4
+Requires:	webserver = apache
+Requires:	apache(mod_dir)
 Requires:	php4
 Requires:	php4-mysql
 Requires:	php4-pcre
