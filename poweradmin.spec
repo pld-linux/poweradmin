@@ -10,20 +10,20 @@ Source0:	http://dl.sourceforge.net/poweradmin/%{name}-%{version}.tar.gz
 Source1:	%{name}.conf
 Patch0:		%{name}-addmasterip.patch
 URL:		http://www.poweradmin.org/
-Requires:	webserver = apache
 Requires:	apache(mod_dir)
+Requires:	mysql-client >= 3.23.56-1
+Requires:	mysql >= 3.23.2
+Requires:	php-pear
+Requires:	php-pear-DB
+Requires:	php-pear-PEAR
 Requires:	php4
+#Requires:	php4-common
+Requires:	php4-dbase
 Requires:	php4-mysql
 Requires:	php4-pcre
-#Requires:	php4-common
 Requires:	php4-zlib
-Requires:	php4-dbase
-Requires:	php-pear
-Requires:	php-pear-PEAR
-Requires:	php-pear-DB
-Requires:	mysql >= 3.23.2
-Requires:	mysql-client >= 3.23.56-1
 #Requires: 	sed
+Requires:	webserver = apache
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -88,4 +88,4 @@ fi
 %files
 %defattr(644,root,root,755)
 %{_poweradmindir}
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/httpd/%{name}.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd/%{name}.conf
