@@ -1,3 +1,5 @@
+# TODO
+# - webapps
 Summary:	PowerAdmin - a web-based front-end for the PowerDNS
 Summary(pl):	PowerAdmin - oparty na WWW interfejs dla PowerDNS-a
 Name:		poweradmin
@@ -11,8 +13,8 @@ Source1:	%{name}.conf
 Patch0:		%{name}-addmasterip.patch
 URL:		http://www.poweradmin.org/
 Requires:	apache(mod_dir)
-Requires:	mysql-client >= 3.23.56-1
 Requires:	mysql >= 3.23.2
+Requires:	mysql-client >= 3.23.56-1
 Requires:	php-pear
 Requires:	php-pear-DB
 Requires:	php-pear-PEAR
