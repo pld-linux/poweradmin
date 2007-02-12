@@ -1,7 +1,7 @@
 # TODO
 # - webapps
 Summary:	PowerAdmin - a web-based front-end for the PowerDNS
-Summary(pl):	PowerAdmin - oparty na WWW interfejs dla PowerDNS-a
+Summary(pl.UTF-8):   PowerAdmin - oparty na WWW interfejs dla PowerDNS-a
 Name:		poweradmin
 Version:	1.2.7
 Release:	0.2
@@ -35,7 +35,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 PowerAdmin is a web-based front-end for the PowerDNS
 (http://www.powerdns.com/) DNS server.
 
-%description -l pl
+%description -l pl.UTF-8
 PowerAdmin to oparty na WWW interfejs dla serwera DNS PowerDNS
 (http://www.powerdns.com/).
 
