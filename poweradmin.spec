@@ -49,7 +49,6 @@ EOF
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_sysconfdir}
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}/{images,inc,docs,style}}
 
 install apache.conf $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
