@@ -11,12 +11,12 @@ Patch0:		%{name}-addmasterip.patch
 Patch1:		%{name}-bugs.patch
 URL:		http://www.poweradmin.org/
 BuildRequires:	rpmbuild(macros) >= 1.268
-Requires:	webapps
 Requires(triggerpostun):	sed >= 4.0
-Requires:	php(mysql)
 Requires:	php(dbase)
+Requires:	php(mysql)
 Requires:	php(zlib)
 Requires:	php-pear-DB
+Requires:	webapps
 Requires:	webserver(indexfile)
 Requires:	webserver(php)
 BuildArch:	noarch
@@ -62,6 +62,8 @@ install style/*.*	$RPM_BUILD_ROOT%{_appdir}/style
 install inc/*.*		$RPM_BUILD_ROOT%{_appdir}/inc
 ln -s %{_sysconfdir}/config.inc.php $RPM_BUILD_ROOT%{_appdir}/inc/config.inc.php
 
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 %triggerin -- apache1 < 1.3.37-3, apache1-base
 %webapp_register apache %{_webapp}
@@ -80,9 +82,6 @@ ln -s %{_sysconfdir}/config.inc.php $RPM_BUILD_ROOT%{_appdir}/inc/config.inc.php
 
 %triggerun -- lighttpd
 %webapp_unregister lighttpd %{_webapp}
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
