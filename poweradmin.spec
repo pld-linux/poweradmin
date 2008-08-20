@@ -50,7 +50,6 @@ alias.url += (
 )
 EOF
 
-
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}/{images,inc,docs,style,locale,install}}
@@ -68,7 +67,6 @@ install inc/*.*		$RPM_BUILD_ROOT%{_appdir}/inc
 cp -a locale		$RPM_BUILD_ROOT%{_appdir}/locale
 install install/*.*	$RPM_BUILD_ROOT%{_appdir}/install
 ln -s %{_sysconfdir}/config.inc.php $RPM_BUILD_ROOT%{_appdir}/inc/config.inc.php
-
 
 %clean
 rm -rf $RPM_BUILD_ROOT
