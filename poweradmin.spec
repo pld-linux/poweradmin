@@ -1,21 +1,20 @@
 Summary:	PowerAdmin - a web-based front-end for the PowerDNS
 Summary(pl.UTF-8):	PowerAdmin - oparty na WWW interfejs dla PowerDNS-a
 Name:		poweradmin
-Version:	1.2.7
+Version:	2.1.1
 Release:	1
 License:	GPL
 Group:		Applications/Databases/Interfaces
-Source0:	http://www.poweradmin.org/releases/%{name}-%{version}-patched.tar.gz
-# Source0-md5:	105bfc2f5e22816c4f5412d448833fb7
-Patch0:		%{name}-addmasterip.patch
-Patch1:		%{name}-bugs.patch
+Source0:	https://www.poweradmin.org/download/%{name}-%{version}.tgz
+# Source0-md5:	6960ab181f2c8425b50df2c00347fab6
 URL:		http://www.poweradmin.org/
 BuildRequires:	rpmbuild(macros) >= 1.268
 Requires(triggerpostun):	sed >= 4.0
 Requires:	php(dbase)
 Requires:	php(mysql)
 Requires:	php(zlib)
-Requires:	php-pear-DB
+Requires:	php-gettext
+Requires:	php-pear-MDB2
 Requires:	webapps
 Requires:	webserver(indexfile)
 Requires:	webserver(php)
@@ -36,9 +35,7 @@ PowerAdmin to oparty na WWW interfejs dla serwera DNS PowerDNS
 (http://www.powerdns.com/).
 
 %prep
-%setup -q -n %{name}
-%patch0 -p1
-%patch1 -p1
+%setup -q
 
 cat > apache.conf <<'EOF'
 Alias /%{name} %{_appdir}
@@ -47,23 +44,41 @@ Alias /%{name} %{_appdir}
 </Directory>
 EOF
 
+cat > lighttpd.conf <<'EOF'
+alias.url += (
+    "/%{name}" => "%{_appdir}",
+)
+EOF
+
+
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}/{images,inc,docs,style}}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}/{images,inc,docs,style,locale,install}}
 
 install apache.conf $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install apache.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
+install lighttpd.conf $RPM_BUILD_ROOT%{_sysconfdir}/lighttpd.conf
 
-mv install.php.orig install.php
-mv inc/config.inc.php $RPM_BUILD_ROOT%{_sysconfdir}
-install *.php *.php-pa	$RPM_BUILD_ROOT%{_appdir}
+mv inc/config-me.inc.php $RPM_BUILD_ROOT%{_sysconfdir}/config.inc.php
+install *.php 		$RPM_BUILD_ROOT%{_appdir}
+install docs/*.sql docs/*.pot		$RPM_BUILD_ROOT%{_appdir}/docs
 install images/*.*	$RPM_BUILD_ROOT%{_appdir}/images
 install style/*.*	$RPM_BUILD_ROOT%{_appdir}/style
 install inc/*.*		$RPM_BUILD_ROOT%{_appdir}/inc
+cp -a locale		$RPM_BUILD_ROOT%{_appdir}/locale
+install install/*.*	$RPM_BUILD_ROOT%{_appdir}/install
 ln -s %{_sysconfdir}/config.inc.php $RPM_BUILD_ROOT%{_appdir}/inc/config.inc.php
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%pre
+%banner %{name} -e <<'EOF'
+
+To finish your setup point your browser to http://yourserver/poweradmin/install/ .
+
+EOF
 
 %triggerin -- apache1 < 1.3.37-3, apache1-base
 %webapp_register apache %{_webapp}
@@ -85,9 +100,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc docs/{ChangeLog,README,README-Sequence,REDHAT-README,TODO}
+%doc docs/{CHANGELOG,LICENSE,README}
 %dir %attr(750,root,http) %{_sysconfdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/lighttpd.conf
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*.php
 %{_appdir}
