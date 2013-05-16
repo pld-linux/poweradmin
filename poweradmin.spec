@@ -2,7 +2,7 @@ Summary:	PowerAdmin - a web-based front-end for the PowerDNS
 Summary(pl.UTF-8):	PowerAdmin - oparty na WWW interfejs dla PowerDNS-a
 Name:		poweradmin
 Version:	2.1.5
-Release:	3
+Release:	4
 License:	GPL
 Group:		Applications/Databases/Interfaces
 Source0:	https://www.poweradmin.org/download/%{name}-%{version}.tgz
@@ -18,6 +18,7 @@ Requires:	php-pear-MDB2
 Requires:	webapps
 Requires:	webserver(indexfile)
 Requires:	webserver(php)
+Conflicts:	apache-base < 2.4.0-1
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -44,6 +45,13 @@ Alias /%{name} %{_appdir}
 </Directory>
 EOF
 
+cat > httpd.conf <<'EOF'
+Alias /%{name} %{_appdir}
+<Directory %{_appdir}>
+	Require all granted
+</Directory>
+EOF
+
 cat > lighttpd.conf <<'EOF'
 alias.url += (
     "/%{name}" => "%{_appdir}",
@@ -55,11 +63,11 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}/{images,inc,docs,style,locale,install}}
 
 install apache.conf $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
-install apache.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
+install httpd.conf $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 install lighttpd.conf $RPM_BUILD_ROOT%{_sysconfdir}/lighttpd.conf
 
 mv inc/config-me.inc.php $RPM_BUILD_ROOT%{_sysconfdir}/config.inc.php
-install *.php 		$RPM_BUILD_ROOT%{_appdir}
+install *.php		$RPM_BUILD_ROOT%{_appdir}
 install docs/*.sql docs/*.pot		$RPM_BUILD_ROOT%{_appdir}/docs
 install images/*.*	$RPM_BUILD_ROOT%{_appdir}/images
 install style/*.*	$RPM_BUILD_ROOT%{_appdir}/style
@@ -84,10 +92,10 @@ EOF
 %triggerun -- apache1 < 1.3.37-3, apache1-base
 %webapp_unregister apache %{_webapp}
 
-%triggerin -- apache < 2.2.0, apache-base
+%triggerin -- apache-base
 %webapp_register httpd %{_webapp}
 
-%triggerun -- apache < 2.2.0, apache-base
+%triggerun -- apache-base
 %webapp_unregister httpd %{_webapp}
 
 %triggerin -- lighttpd
