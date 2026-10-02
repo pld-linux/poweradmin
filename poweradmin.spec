@@ -2,14 +2,14 @@ Summary:	PowerAdmin - a web-based front-end for the PowerDNS
 Summary(pl.UTF-8):	PowerAdmin - oparty na WWW interfejs dla PowerDNS-a
 Name:		poweradmin
 Version:	2.1.5
-Release:	4
+Release:	5
 License:	GPL
 Group:		Applications/Databases/Interfaces
 Source0:	https://www.poweradmin.org/download/%{name}-%{version}.tgz
 # Source0-md5:	baa773f9a95f7dc2d3ae941372238f83
 URL:		http://www.poweradmin.org/
 BuildRequires:	rpmbuild(macros) >= 1.268
-Requires(triggerpostun):	sed >= 4.0
+Requires(postun):	sed >= 4.0
 Requires:	php(dbase)
 Requires:	php(gettext)
 Requires:	php(mysql)
